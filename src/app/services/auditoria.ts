@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AuditoriaService {
-  private apiUrl = 'http://localhost:8080/api/auditoria';
+  private apiUrl = 'https://sistemainventario-backend-m5g8.onrender.com/api/auditoria';
 
   constructor(private http: HttpClient) { }
 

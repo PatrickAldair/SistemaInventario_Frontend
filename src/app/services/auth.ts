@@ -6,7 +6,7 @@ import { Observable, tap } from 'rxjs';
   providedIn: 'root'
 })
 export class Auth {
-  private apiUrl = 'http://localhost:8080/api/auth/login';
+  private apiUrl = 'https://sistemainventario-backend-m5g8.onrender.com/api/auth/login';
 
   constructor(private http: HttpClient) { }
 
