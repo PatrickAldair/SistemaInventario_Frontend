@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class Producto {
-  private apiUrl = 'https://sistemainventario-backend-m5g8.onrender.com/api/productos';
+  private apiUrl = 'https://sistemainventario-backend-1.onrender.com/api/productos';
 
   constructor(private http: HttpClient) { }
 
