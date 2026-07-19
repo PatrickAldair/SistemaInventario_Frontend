@@ -1,0 +1,66 @@
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Registrar Nuevo Material Eléctrico</h4>
+            </div>
+            <div class="card-body p-4">
+
+                <form (ngSubmit)="guardarProducto()">
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Nombre del Producto / Descripción</label>
+                        <input type="text" class="form-control" name="nombre" [(ngModel)]="nuevoProducto.nombre"
+                            placeholder="Ej. Bobina de Cable 12AWG" required>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Número de Lote</label>
+                            <input type="text" class="form-control" name="lote" [(ngModel)]="nuevoProducto.lote"
+                                placeholder="Ej. L-2024-X" required>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Cantidad Inicial</label>
+                            <input type="number" class="form-control" name="cantidad"
+                                [(ngModel)]="nuevoProducto.cantidad" required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Categoría</label>
+                            <select class="form-select" name="categoria" [(ngModel)]="nuevoProducto.categoria">
+                                <option value="">Seleccione una categoría...</option>
+                                <option value="Cables">Cables y Conductores</option>
+                                <option value="Proteccion">Protección (Térmicos)</option>
+                                <option value="Iluminacion">Iluminación LED</option>
+                                <option value="Herramientas">Herramientas</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Ubicación Física</label>
+                            <select class="form-select" name="ubicacion" [(ngModel)]="nuevoProducto.ubicacion" required>
+                                <option value="">Seleccione zona de almacenaje...</option>
+                                @for (zona of listaUbicaciones; track zona) {
+                                <option [value]="zona">{{ zona }}</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <button type="button" class="btn btn-secondary" routerLink="/productos">Cancelar</button>
+                        <button type="submit" class="btn btn-success px-4">Guardar Producto</button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>

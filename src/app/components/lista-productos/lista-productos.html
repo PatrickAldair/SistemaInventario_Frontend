@@ -1,0 +1,164 @@
+<div class="card shadow-sm">
+  <div class="card-header bg-white py-3">
+    <div class="row align-items-center">
+      <div class="col-md-4">
+        <h5 class="mb-0">Inventario Inkatec</h5>
+      </div>
+      <div class="col-md-4">
+        <select class="form-select form-select-sm" [(ngModel)]="categoriaSeleccionada">
+          <option value="">🔍 Filtrar por categoría (Todas)</option>
+          <option value="Cables">Cables y Conductores</option>
+          <option value="Protección">Protección (Térmicos)</option>
+          <option value="Iluminación">Iluminación LED</option>
+          <option value="Herramientas">Herramientas</option>
+        </select>
+      </div>
+      <div class="col-md-4 text-end">
+        <button class="btn btn-primary btn-sm" routerLink="/nuevo">+ Nuevo Ingreso</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-hover mb-0">
+      <thead class="table-dark">
+        <tr>
+          <th>ID</th>
+          <th>Producto</th>
+          <th>Categoría</th>
+          <th>Lote</th>
+          <th>Ubicación</th>
+          <th class="text-center">Stock</th>
+          <th class="text-center">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of productosFiltrados; track item.id) {
+          <tr>
+            <td>#{{ item.id }}</td>
+            <td>{{ item.nombre }}</td>
+            <td>
+              <span class="badge border text-dark">{{ item.categoria }}</span>
+            </td>
+            <td>
+              <small class="text-muted">{{ item.lote }}</small>
+            </td>
+            <td>{{ item.ubicacion }}</td>
+            <td class="text-center">
+              <span
+                class="badge"
+                [class.bg-danger]="item.cantidad < 20"
+                [class.bg-success]="item.cantidad >= 20"
+              >
+                {{ item.cantidad }}
+              </span>
+            </td>
+            <td class="text-center">
+              @if (auth.getRole() === 'ADMIN') {
+                <button
+                  class="btn btn-outline-warning btn-sm me-2"
+                  (click)="abrirModalStock(item)"
+                  title="Corregir Stock"
+                >
+                  🔄
+                </button>
+              }
+              <button
+                class="btn btn-outline-primary btn-sm me-2"
+                (click)="abrirModalTraslado(item)"
+                title="Trasladar Zona"
+              >
+                ↔️
+              </button>
+              <button
+                class="btn btn-outline-danger btn-sm"
+                (click)="eliminar(item.id)"
+                title="Eliminar"
+              >
+                🗑️
+              </button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+<!-- ================= MODAL TRASLADO ================= -->
+<div class="modal-custom-backdrop" [style.display]="mostrarModalTraslado ? 'flex' : 'none'">
+  <div class="card shadow-lg border-0 modal-custom-content">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+      <h5 class="mb-0 fw-bold">Trasladar Material</h5>
+      <button type="button" class="btn-close btn-close-white" (click)="cerrarModales()"></button>
+    </div>
+    <div class="card-body p-4">
+      @if (mensajeExitoModal) {
+        <div class="alert alert-success text-center fw-bold text-uppercase py-2">
+          ✅ {{ mensajeExitoModal }}
+        </div>
+      } @else {
+        <div class="mb-3">
+          <p class="text-muted mb-1">Producto a trasladar:</p>
+          <h5 class="fw-bold text-dark">{{ productoSeleccionado?.nombre }} (Lote: {{ productoSeleccionado?.lote }})</h5>
+        </div>
+        
+        <div class="mb-3">
+          <label class="form-label text-secondary small fw-bold">Posición Actual</label>
+          <input type="text" class="form-control bg-light" [value]="productoSeleccionado?.ubicacion" disabled>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label text-primary small fw-bold">Nueva Posición Destino</label>
+          <select class="form-select border-primary" [(ngModel)]="nuevaUbicacion">
+            @for (ubicacion of listaUbicaciones; track ubicacion) {
+              <option [value]="ubicacion">{{ ubicacion }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="d-grid gap-2">
+          <button class="btn btn-primary btn-lg fw-bold" (click)="confirmarTraslado()">Confirmar Traslado</button>
+          <button class="btn btn-light" (click)="cerrarModales()">Cancelar</button>
+        </div>
+      }
+    </div>
+  </div>
+</div>
+
+<!-- ================= MODAL CORREGIR STOCK ================= -->
+<div class="modal-custom-backdrop" [style.display]="mostrarModalStock ? 'flex' : 'none'">
+  <div class="card shadow-lg border-0 modal-custom-content">
+    <div class="card-header bg-warning text-dark d-flex justify-content-between align-items-center">
+      <h5 class="mb-0 fw-bold">Corregir Stock Físico</h5>
+      <button type="button" class="btn-close" (click)="cerrarModales()"></button>
+    </div>
+    <div class="card-body p-4">
+      @if (mensajeExitoModal) {
+        <div class="alert alert-success text-center fw-bold text-uppercase py-2">
+          ✅ {{ mensajeExitoModal }}
+        </div>
+      } @else {
+        <div class="mb-3">
+          <p class="text-muted mb-1">Ajuste de inventario para:</p>
+          <h5 class="fw-bold text-dark">{{ productoSeleccionado?.nombre }}</h5>
+          <span class="badge bg-secondary">Ubicación: {{ productoSeleccionado?.ubicacion }}</span>
+        </div>
+        
+        <div class="mb-3">
+          <label class="form-label text-secondary small fw-bold">Stock Registrado en Sistema</label>
+          <input type="text" class="form-control bg-light fs-5" [value]="productoSeleccionado?.cantidad + ' unidades'" disabled>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label text-warning-emphasis small fw-bold">Nuevo Stock Físico Real</label>
+          <input type="number" class="form-control border-warning fs-4 fw-bold text-center" [(ngModel)]="nuevoStock" min="0">
+        </div>
+
+        <div class="d-grid gap-2">
+          <button class="btn btn-warning btn-lg fw-bold" (click)="confirmarStock()">Aplicar Corrección</button>
+          <button class="btn btn-light" (click)="cerrarModales()">Cancelar</button>
+        </div>
+      }
+    </div>
+  </div>
+</div>

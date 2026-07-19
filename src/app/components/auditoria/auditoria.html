@@ -1,0 +1,61 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold text-dark">Historial de Auditoría</h3>
+    <span class="badge bg-warning text-dark px-3 py-2">Solo Administradores</span>
+  </div>
+
+  <div class="card shadow-sm border-0">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover table-striped mb-0">
+          <thead class="table-dark">
+            <tr>
+              <th>Fecha y Hora</th>
+              <th>Usuario</th>
+              <th>Acción</th>
+              <th>Producto Afectado</th>
+              <th>Detalles</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (mov of movimientos; track mov.id) {
+              <tr>
+                <td>{{ mov.fechaMovimiento | date:'dd/MM/yyyy HH:mm' }}</td>
+                
+                <td class="fw-bold">{{ mov.usuario.username }}</td>
+                
+                <td>
+                  @if (mov.accion === 'CREACION') {
+                    <span class="badge bg-success">CREACIÓN</span>
+                  } @else if (mov.accion === 'ACTUALIZACION') {
+                    <span class="badge bg-primary">ACTUALIZACIÓN</span>
+                  } @else if (mov.accion === 'ELIMINACION') {
+                    <span class="badge bg-danger">ELIMINACIÓN</span>
+                  } @else {
+                    <span class="badge bg-secondary">{{ mov.accion }}</span>
+                  }
+                </td>
+                
+                <td>{{ mov.producto.nombre }} (Lote: {{ mov.producto.lote }})</td>
+                
+                <td>
+                  <small class="text-muted">{{ mov.detalles }}</small><br>
+                  @if (mov.zonaOrigen || mov.zonaDestino) {
+                    <small class="text-secondary">
+                      Ubicación: {{ mov.zonaOrigen || 'N/A' }} ➡️ {{ mov.zonaDestino || 'N/A' }}
+                    </small>
+                  }
+                </td>
+              </tr>
+            }
+            @if (movimientos.length === 0) {
+              <tr>
+                <td colspan="5" class="text-center py-4 text-muted">No hay registros de movimientos en el sistema.</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
