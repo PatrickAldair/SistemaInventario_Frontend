@@ -21,7 +21,7 @@ export class Registro {
     this.mensajeExito = '';
     this.mensajeError = '';
 
-    this.http.post('http://localhost:8080/api/usuarios/trabajadores', this.nuevoUsuario).subscribe({
+    this.http.post('https://sistemainventario-backend-1.onrender.com/api/usuarios/trabajadores', this.nuevoUsuario).subscribe({
       next: (res) => {
         this.mensajeExito = '¡Trabajador registrado exitosamente!';
         this.nuevoUsuario = { username: '', password: '' }; 
