@@ -13,12 +13,12 @@ import { Producto } from '../../services/producto';
 export class FormProducto {
 
   listaUbicaciones = [
-    'Zona A - Rack Principal',
-    'Zona B - Almacén Frío',
-    'Pasillo 1 - Estantería Eléctrica',
-    'Pasillo 2 - Herramientas',
-    'Vitrina de Exhibición',
-    'Caja Fuerte (Instrumentos)'
+    'Estante A - Cables y Adaptadores',
+    'Estante B - Placas y Componentes',
+    'Rack Principal - Servidores y Redes',
+    'Armario de Herramientas',
+    'Zona de Diagnóstico y Reparación',
+    'Almacén Secundario - Repuestos'
   ];
 
   nuevoProducto = {
